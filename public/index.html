@@ -1,0 +1,445 @@
+<html>
+<head>
+    <title>The Duke</title>
+    <link rel="stylesheet" href = "style.css">
+</head>
+<body>
+    <div id="startdiv">
+        <button onclick='addtile()' >add tile</button>
+        <button onclick='oracle()'>divination</button>
+        <button onclick='duchess()'>summon</button>
+        <button onclick='restart()' id="restartbutton">restart</button>
+    </div>
+    <label for="fname">Room name:</label> 
+    <input type="text" id="inputbox" placeholder='enter room name'>
+    <button id="createroom">Create room</button>
+    <button id="joinroom">Join room</button>
+    <button id="joinrandom">Join random room</button>
+    
+    <!-- Establishing the main game board, the first number of the id will be the y coordinate and second will be the x coordinate -->
+    <div class='board' id="board">
+        <!--making the deploy box for the starting tiles(and for further tiles)-->
+        <div class="square" id="containerbox">
+            <!--Making the individual tiles and placing them inside of a starting square on the side of the screen-->
+            <!--player 1 tiles-->
+            <div class="tile displayed" id="duke1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/duke.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/duke2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile displayed" id="f11" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/footman.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/footman2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile displayed" id="f21" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/footman.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/footman2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="as1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/assassin.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/assassin2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="bo1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/bowman.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/bowman2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="ch1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/champion.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/champion2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="dr1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/dragoon.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/dragoon2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="ge1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/general.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/general2.png">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tile" id="kn1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/knight.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/knight2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="ma1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/marshall.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/marshall2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="pi1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/pikeman.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/pikeman2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="pr1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/priest.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/priest2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="se1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/seer.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/seer2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="lo1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/lbowman.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/lbowman2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="wi1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/wizard.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/wizard2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="or1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/oracle.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/oracle2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="du1" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 1 tiles/duchess.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 1 tiles/duchess2.png">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!--player 2 tiles-->
+            <div class="tile displayed" id="duke2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/duke.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/duke2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile displayed" id="f12" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/footman.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/footman2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile displayed" id="f22" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/footman.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/footman2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="as2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/assassin.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/assassin2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="bo2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/bowman.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/bowman2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="ch2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/champion.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/champion2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="dr2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/dragoon.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/dragoon2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="ge2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/general.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/general2.png">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tile" id="kn2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/knight.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/knight2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="ma2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/marshall.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/marshall2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="pi2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/pikeman.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/pikeman2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="pr2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/priest.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/priest2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="se2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/seer.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/seer2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="lo2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/lbowman.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/lbowman2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="wi2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/wizard.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/wizard2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="or2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/oracle.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/oracle2.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile" id="du2" draggable="true">
+                <div class = "tile_inner">
+                    <div class="tile_face face1">
+                        <img class="image" src="Resources/player 2 tiles/duchess.png">
+                    </div>
+                    <div class="tile_face face2">
+                        <img class="image" src="Resources/player 2 tiles/duchess2.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--making the squares of the board-->
+        <div class = 'square' id = "s11"></div>  
+        <div class = 'square' id = "s12"></div>
+        <div class = 'square' id = "s13"></div>
+        <div class = 'square' id = "s14"></div>
+        <div class = 'square' id = "s15"></div>
+        <div class = 'square' id = "s16"></div>
+        <div class = 'square' id = "s21"></div>
+        <div class = 'square' id = "s22"></div>
+        <div class = 'square' id = "s23"></div>
+        <div class = 'square' id = "s24"></div>
+        <div class = 'square' id = "s25"></div>
+        <div class = 'square' id = "s26"></div>
+        <div class = 'square' id = "s31"></div>
+        <div class = 'square' id = "s32"></div>
+        <div class = 'square' id = "s33"></div>
+        <div class = 'square' id = "s34"></div>
+        <div class = 'square' id = "s35"></div>
+        <div class = 'square' id = "s36"></div>
+        <div class = 'square' id = "s41"></div>
+        <div class = 'square' id = "s42"></div>
+        <div class = 'square' id = "s43"></div>
+        <div class = 'square' id = "s44"></div>
+        <div class = 'square' id = "s45"></div>
+        <div class = 'square' id = "s46"></div>
+        <div class = 'square' id = "s51"></div>
+        <div class = 'square' id = "s52"></div>
+        <div class = 'square' id = "s53"></div>
+        <div class = 'square' id = "s54"></div>
+        <div class = 'square' id = "s55"></div>
+        <div class = 'square' id = "s56"></div>
+        <div class = 'square' id = "s61"></div>
+        <div class = 'square' id = "s62"></div>
+        <div class = 'square' id = "s63"></div>
+        <div class = 'square' id = "s64"></div>
+        <div class = 'square' id = "s65"></div>
+        <div class = 'square' id = "s66"></div>
+    </div>
+
+<script src="app.js" defer></script>
+<script src="/socket.io/socket.io.js"></script>
+</body>
+</html>
