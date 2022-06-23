@@ -154,6 +154,33 @@ io.on('connection', function(socket){
         }
     })
 
+    socket.on("makecapture", function(datasent){ //just a connection between the two
+        for(var room in listofrooms){
+            if(listofrooms[room][0] == socket){
+                listofrooms[room][1].emit('opponent_capture', datasent);
+                break;
+            }
+            else if(listofrooms[room][1] == socket){
+                listofrooms[room][0].emit('opponent_capture', datasent);
+                break;
+            }
+            
+        }
+    })
+
+    socket.on("placeduchess", function(datasent){ //just a connection between the two
+        for(var room in listofrooms){
+            if(listofrooms[room][0] == socket){
+                listofrooms[room][1].emit('opponent_duchess', datasent);
+                break;
+            }
+            else if(listofrooms[room][1] == socket){
+                listofrooms[room][0].emit('opponent_duchess', datasent);
+                break;
+            }
+            
+        }
+    })
 })
 
 

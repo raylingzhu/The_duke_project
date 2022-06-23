@@ -14,7 +14,8 @@ var game = { //game object, which keeps track of gamestate
     divinationmode : false,
     teleportmode : false,
     online : false,
-    offline: false
+    offline: false,
+    duchess: false
 }
 
 
@@ -37,7 +38,6 @@ var inroomid = -1;
 function onlinemode(verifier){
     if(verifier == true){
         game.online = true;
-
         //making the nessasary elements invisible (restart button and the other players tiles)
         var button = document.getElementById('restartbutton');
         button.parentNode.removeChild(button); //yes miss, i understand that i am telling a parent to kill their child here, look away(they'll make a new one dont worry)
@@ -45,53 +45,16 @@ function onlinemode(verifier){
             document.getElementById("duke2").classList.remove("displayed");
             document.getElementById("f12").classList.remove("displayed");
             document.getElementById("f22").classList.remove("displayed");
-            document.getElementById("duke2").draggable = "false";
-            document.getElementById("f12").draggable = "false";
-            document.getElementById("f22").draggable = "false";
-            document.getElementById("as2").draggable = "false";
-            document.getElementById("bo2").draggable = "false";
-            document.getElementById("ch2").draggable = "false";
-            document.getElementById("dr2").draggable = "false";
-            document.getElementById("ge2").draggable = "false";
-            document.getElementById("kn2").draggable = "false";
-            document.getElementById("ma2").draggable = "false";
-            document.getElementById("pi2").draggable = "false";
-            document.getElementById("pr2").draggable = "false";
-            document.getElementById("se2").draggable = "false";
-            document.getElementById("lo2").draggable = "false";
-            document.getElementById("wi2").draggable = "false";
-            document.getElementById("or2").draggable = "false";
-            document.getElementById("du2").draggable = "false";
-
-
         }
         else{//for player 2
             document.getElementById("duke1").classList.remove("displayed");
             document.getElementById("f11").classList.remove("displayed");
             document.getElementById("f21").classList.remove("displayed");
-            document.getElementById("duke1").draggable = "false";
-            document.getElementById("f11").draggable = "false";
-            document.getElementById("f21").draggable = "false";
-            document.getElementById("as1").draggable = "false";
-            document.getElementById("bo1").draggable = "false";
-            document.getElementById("ch1").draggable = "false";
-            document.getElementById("dr1").draggable = "false";
-            document.getElementById("ge1").draggable = "false";
-            document.getElementById("kn1").draggable = "false";
-            document.getElementById("ma1").draggable = "false";
-            document.getElementById("pi1").draggable = "false";
-            document.getElementById("pr1").draggable = "false";
-            document.getElementById("se1").draggable = "false";
-            document.getElementById("lo1").draggable = "false";
-            document.getElementById("wi1").draggable = "false";
-            document.getElementById("or1").draggable = "false";
-            document.getElementById("du1").draggable = "false";
         }
 
     }
     else{
         game.online = false;
-
         var restartbutton = document.createElement("button");
         restartbutton.id = "restartbutton";
         restartbutton.onclick = 'restart()';
@@ -99,46 +62,6 @@ function onlinemode(verifier){
         var temp = document.getElementById("startdiv");
         temp.appendChild(restartbutton);
         restart();
-        if(inroomid == 1){//if they are player 1
-            document.getElementById("duke2").draggable = "true";
-            document.getElementById("f12").draggable = "true";
-            document.getElementById("f22").draggable = "true";
-            document.getElementById("as2").draggable = "true";
-            document.getElementById("bo2").draggable = "true";
-            document.getElementById("ch2").draggable = "true";
-            document.getElementById("dr2").draggable = "true";
-            document.getElementById("ge2").draggable = "true";
-            document.getElementById("kn2").draggable = "true";
-            document.getElementById("ma2").draggable = "true";
-            document.getElementById("pi2").draggable = "true";
-            document.getElementById("pr2").draggable = "true";
-            document.getElementById("se2").draggable = "true";
-            document.getElementById("lo2").draggable = "true";
-            document.getElementById("wi2").draggable = "true";
-            document.getElementById("or2").draggable = "true";
-            document.getElementById("du2").draggable = "true";
-
-
-        }
-        else{//for player 2
-            document.getElementById("duke1").draggable = "true";
-            document.getElementById("f11").draggable = "true";
-            document.getElementById("f21").draggable = "true";
-            document.getElementById("as1").draggable = "true";
-            document.getElementById("bo1").draggable = "true";
-            document.getElementById("ch1").draggable = "true";
-            document.getElementById("dr1").draggable = "true";
-            document.getElementById("ge1").draggable = "true";
-            document.getElementById("kn1").draggable = "true";
-            document.getElementById("ma1").draggable = "true";
-            document.getElementById("pi1").draggable = "true";
-            document.getElementById("pr1").draggable = "true";
-            document.getElementById("se1").draggable = "true";
-            document.getElementById("lo1").draggable = "true";
-            document.getElementById("wi1").draggable = "true";
-            document.getElementById("or1").draggable = "true";
-            document.getElementById("du1").draggable = "true";
-        }
     }
 }
 
@@ -219,6 +142,21 @@ socket.on('opponent move', function(movementarray){
         }
 })
 
+socket.on('opponent_capture', function(movementarray){
+        //movement array containing the tile name of the moved tile and the location it moved to(location as an array [y,x])
+        //then basically an altered version of the drag n drop movement of the tile will be used to place the tile
+        var passedtileid = movementarray[0];
+        var newlocation = movementarray[1];
+        var selectedtile = listoftiles[passedtileid]; //getting the dragged tile object
+        var validity = makemove(selectedtile,newlocation); //validity does not actually matter here, as the move has already been verified on the other end
+        if(selectedtile.ownership == "player1"){
+            checkforchecks(listoftiles["duke2"], listoftiles["duke1"]);
+        }
+        else{
+            checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
+        }
+})
+
 socket.on("opponent_tp", function(movementarray){
     var passedtileid = movementarray[0];
     var newlocation = movementarray[1];
@@ -287,6 +225,23 @@ socket.on('opponent_place', function(movementarray){
         }
     }
 
+    console.log(board);
+})
+
+socket.on('opponent_duchess', function(movementarray){
+    var passedtileid = movementarray[0];
+    var newlocation = movementarray[1];
+    var tile_elem = document.getElementById(passedtileid);
+    document.getElementById("s"+newlocation[0].toString()+newlocation[1].toString()).appendChild(tile_elem);
+
+    if(tile_elem.classList.contains('displayed') == false){
+        tile_elem.classList.add("displayed");
+    }
+
+    var validity = makeplacement(listoftiles[passedtileid],newlocation);
+
+    listoftiles["duke"+passedtileid[2]].fliptile();
+    game.changeturns();
     console.log(board);
 })
 
@@ -1859,7 +1814,8 @@ function generatetile(player){//'player' passed in as either 1 or 2 as a string,
     }
     if(array.length > 0){
         var index = Math.floor(Math.random() * array.length);//gives a random index for the array of unplaced tiles
-        var newtile = array[index];
+        //var newtile = array[index];
+        var newtile = "bo1";
         if(player == "1"){
             unplaced1.splice(index,1); //removes the tile that was just generated
         }
@@ -1990,6 +1946,7 @@ function duchess(){
                         }
                     }
                 }
+                game.duchess = true;
                 game.changeturns();
                 alert("Please place the duchess in the desired position adjacent to the duke");
             }
@@ -2305,6 +2262,10 @@ draggable.forEach(function(draggable){
                         var originalsquareID = "s"+(selectedtile.y.toString()+selectedtile.x.toString());//constructing the id of the original square
                         const originalsquare = document.getElementById(originalsquareID);
                         originalsquare.appendChild(draggable);//putting the tile back to its original spot
+                        if(validity == "validstrike"){
+                            var data = [selectedtileID,newlocation];
+                            socket.emit("makecapture", data);
+                        }
                     }
                     if(validity == "validmove"){
                         if(selectedtile.ownership == "player1"){
@@ -2372,8 +2333,16 @@ draggable.forEach(function(draggable){
                     }
                     else{
                         if(game.online == true){
-                            datasent = [selectedtileID,newlocation];
-                            socket.emit("placetile", datasent);
+                            if(game.duchess == true){
+                                datasent = [selectedtileID,newlocation];
+                                socket.emit("placeduchess", datasent);
+                                game.duchess = false;
+                                
+                            }
+                            else{
+                                datasent = [selectedtileID,newlocation];
+                                socket.emit("placetile", datasent);
+                            }
                         }
                     }
                     if((listoftiles['duke1'].y != 'unplaced')&&(listoftiles['duke2'].y != 'unplaced')&&(listoftiles['f11'].y != 'unplaced')&&(listoftiles['f12'].y != 'unplaced')&&(listoftiles['f21'].y != 'unplaced')&&(listoftiles['f22'].y != 'unplaced')){
