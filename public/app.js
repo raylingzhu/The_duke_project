@@ -1727,6 +1727,7 @@ or2.possiblemove = function(){
 }
 
 
+
 var du2 =  new tile("unplaced","unplaced","player2", "duchess", "du2");
 du2.possiblemove = function(board){
     movelist = [];
