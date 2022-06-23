@@ -55,6 +55,9 @@ io.on('connection', function(socket){
                     socketid = 2;
                     socket.emit('playerroom', message);
                     socket.emit('playerid', socketid);
+                    for(a in listofrooms[i]){
+                        listofrooms[i][a].emit('roomfilled', data);
+                    }
                     break
                 }
             }
@@ -73,6 +76,9 @@ io.on('connection', function(socket){
                 roomname = listofroomnames[i];
                 socket.emit('playerroom', roomname);
                 socket.emit('playerid', socketid);
+                for(a in listofrooms[i]){
+                    listofrooms[i][a].emit('roomfilled');
+                }
                 break
             }
         }
@@ -181,6 +187,22 @@ io.on('connection', function(socket){
             
         }
     })
+
+    
+    socket.on("enemyoracle", function(datasent){ //just a connection between the two
+        for(var room in listofrooms){
+            if(listofrooms[room][0] == socket){
+                listofrooms[room][1].emit('opponent_oracle', datasent);
+                break;
+            }
+            else if(listofrooms[room][1] == socket){
+                listofrooms[room][0].emit('opponent_oracle', datasent);
+                break;
+            }
+            
+        }
+    })
+
 })
 
 

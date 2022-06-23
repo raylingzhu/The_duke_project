@@ -15,6 +15,7 @@ var game = { //game object, which keeps track of gamestate
     teleportmode : false,
     online : false,
     offline: false,
+    roomfull: false,
     duchess: false
 }
 
@@ -119,6 +120,11 @@ socket.on('roomdisband', function(){
     room = "";
     inroomid = "";
     onlinemode(false);
+    game.roomfull = false;
+})
+
+socket.on('roomfilled', function(verifier){
+    game.roomfull = true;
 })
 
 socket.on('full', function(){
@@ -190,7 +196,7 @@ socket.on("opponent_tp", function(movementarray){
     else{
         checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
     }
-    listoftiles[teleporttile].fliptile();
+    teleporttile.fliptile();
 })
 
 socket.on('opponent_place', function(movementarray){
@@ -245,6 +251,23 @@ socket.on('opponent_duchess', function(movementarray){
     console.log(board);
 })
 
+socket.on('opponent_oracle', function(movementarray){
+    var passedtileid = movementarray[0];
+    var newlocation = movementarray[1];
+    var tile_elem = document.getElementById(passedtileid);
+    document.getElementById("s"+newlocation[0].toString()+newlocation[1].toString()).appendChild(tile_elem);
+    listoftiles['or' + passedtileid[2]].fliptile();
+
+    if(tile_elem.classList.contains('displayed') == false){
+        tile_elem.classList.add("displayed");
+    }
+
+    var validity = makeplacement(listoftiles[passedtileid],newlocation);
+
+    game.changeturns();
+
+    game.setupcomplete = true;
+})
 
 
 
@@ -1815,8 +1838,7 @@ function generatetile(player){//'player' passed in as either 1 or 2 as a string,
     }
     if(array.length > 0){
         var index = Math.floor(Math.random() * array.length);//gives a random index for the array of unplaced tiles
-        //var newtile = array[index];
-        var newtile = "bo1";
+        var newtile = array[index];
         if(player == "1"){
             unplaced1.splice(index,1); //removes the tile that was just generated
         }
@@ -2305,7 +2327,7 @@ draggable.forEach(function(draggable){
                         }
                         listoftiles[teleporttile].fliptile();
                         if(game.online == true){
-                            var datasent = [selectedtileID,newlocation,teleporttile.name];
+                            var datasent = [selectedtileID,newlocation,teleporttile];
                             socket.emit("maketeleport", datasent);
                         }
                     }
@@ -2322,11 +2344,19 @@ draggable.forEach(function(draggable){
                 originalsquare.appendChild(draggable);//putting the tile back to its original spot
             }
         }
-
         else{//for the placement of tiles(for when unplaced tiles are dragged from)
             if(finalsquare != 'containerbox'){
                 if((game.setupcomplete == false)&&(game.divinationmode == false)&&(game.teleportmode == false)){//checks if its in the setup phase/place tile phase
                     var newlocation = [parseInt(finalsquare[1]),parseInt(finalsquare[2])];
+                    if(game.online == true){
+                        if(game.roomfull == false){
+                            alert("The other player has not joined yet, cannot begin game.");
+                            const startingbox = document.querySelector('#containerbox');
+                            startingbox.appendChild(draggable);//putting the tile back to the starting box
+                            draggable.classList.remove("dragged");
+                            return;
+                        }
+                    }
                     var validity = makeplacement(selectedtile,newlocation);
                     if (validity == 'invalidmove'){ //need to place it back in it's original location
                         const startingbox = document.querySelector('#containerbox');
@@ -2334,16 +2364,21 @@ draggable.forEach(function(draggable){
                     }
                     else{
                         if(game.online == true){
-                            if(game.duchess == true){
-                                datasent = [selectedtileID,newlocation];
-                                socket.emit("placeduchess", datasent);
-                                game.duchess = false;
-                                
+                            if(game.roomfull == true){
+                                if(game.duchess == true){
+                                    datasent = [selectedtileID,newlocation];
+                                    socket.emit("placeduchess", datasent);
+                                    game.duchess = false;
+                                    
+                                }
+                                else{
+                                    datasent = [selectedtileID,newlocation];
+                                    socket.emit("placetile", datasent);
+                                }
                             }
-                            else{
-                                datasent = [selectedtileID,newlocation];
-                                socket.emit("placetile", datasent);
-                            }
+                        }
+                        else{
+                            game.offline = true;
                         }
                     }
                     if((listoftiles['duke1'].y != 'unplaced')&&(listoftiles['duke2'].y != 'unplaced')&&(listoftiles['f11'].y != 'unplaced')&&(listoftiles['f12'].y != 'unplaced')&&(listoftiles['f21'].y != 'unplaced')&&(listoftiles['f22'].y != 'unplaced')){
@@ -2381,9 +2416,8 @@ draggable.forEach(function(draggable){
                         });
                         if(game.online == true){
                             var datasent = [selectedtileID,newlocation];
-                            socket.emit("placetile", board);
+                            socket.emit("enemyoracle", datasent);
                         }
-                        
                     }
                 }
             }
@@ -2393,18 +2427,23 @@ draggable.forEach(function(draggable){
     draggable.addEventListener("dblclick", function(){
         if((draggable.id == "or1")||(draggable.id =="or2")){
             if(game.playerturn == listoftiles[draggable.id].ownership){//if the player that owns the tile is able to play
+                if(game.online == true){
+                    if(parseInt(game.playerturn[6]) != inroomid){ 
+                        return;
+                    }
+                }
                 oracle();
-            }
-        }
-        else if((draggable.id == "du1")||(draggable.id =="du2")){
-            if(game.playerturn == listoftiles[draggable.id].ownership){//if the player that owns the tile is able to play
-                duchess();
             }
         }
         else if((draggable.id == "du1")||(draggable.id == "du2")||(draggable.id =="ge1")||(draggable.id =="ge2")||(draggable.id =="ma1")||(draggable.id =="ma2")){//doesn't currently work dor duchess as parameter clashes with previous
             if(game.playerturn == listoftiles[draggable.id].ownership){//if the player that owns the tile is able to play
                 if(game.setupcomplete == true){ //mandatory check to see whether the game is able to be played
                     if(game.teleportmode == false){
+                        if(game.online == true){
+                            if(parseInt(game.playerturn[6]) != inroomid){ 
+                                return;
+                            }
+                        }
                         game.teleportmode = true; //this tells the movement section to use the teleport ranges of the tile to check for the movement of tiles
                         alert("teleport mode on");
                         teleporttile = draggable.id;
@@ -2414,6 +2453,17 @@ draggable.forEach(function(draggable){
         }
     })
 })
+
+function summon(){
+    if(game.playerturn == listoftiles[draggable.id].ownership){//if the player that owns the tile is able to play
+        if(game.online == true){
+            if(parseInt(game.playerturn[6]) != inroomid){ 
+                return;
+            }
+        }
+        duchess();
+    }
+}
 
 
 square.forEach(function(square){
@@ -2468,6 +2518,8 @@ function restart(){
     game.teleportmode = false;
     game.online = false;
     game.offline = false;
+    game.duchess = false;
+    game.roomfull = false;
 
     //resetting the tiles
     draggable.forEach(function(draggable){

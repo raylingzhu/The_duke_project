@@ -1,4 +1,9 @@
 /*Making the board*/  
+
+body {
+    background-color: #302f2f;
+}
+
 #board{
     display: inline-block;
     position: absolute;
@@ -21,8 +26,11 @@
     background-color: #7699AF;
     
 }
-
-
+ button{
+    font-size: 1vh; width: 6vw;;
+    width: 5vw;
+    height: 2vh;
+ }
 
 /*Establishing location of each square on the board*/
 #s11{
@@ -246,7 +254,7 @@
 
 #containerbox{
     filter: brightness(100%);
-    background-color: white;
+    background-color: #505050;
     border: 1px solid black; 
     width: 50%; 
     height: 100%; 
