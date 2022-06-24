@@ -16,7 +16,8 @@ var game = { //game object, which keeps track of gamestate
     online : false,
     offline: false,
     roomfull: false,
-    duchess: false
+    duchess: false,
+    game_end: false
 }
 
 
@@ -58,11 +59,13 @@ function onlinemode(verifier){
         game.online = false;
         var restartbutton = document.createElement("button");
         restartbutton.id = "restartbutton";
-        restartbutton.onclick = 'restart()';
         restartbutton.innerHTML = "restart";
         var temp = document.getElementById("startdiv");
         temp.appendChild(restartbutton);
         restart();
+        restartbutton.onclick = function(){
+            location.reload();
+        };
     }
 }
 
@@ -146,6 +149,9 @@ socket.on('opponent move', function(movementarray){
         else{
             checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
         }
+        if(game.game_end ==true){
+            location.reload();
+        }
 })
 
 socket.on('opponent_capture', function(movementarray){
@@ -160,6 +166,9 @@ socket.on('opponent_capture', function(movementarray){
         }
         else{
             checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
+        }
+        if(game.game_end ==true){
+            location.reload();
         }
 })
 
@@ -195,6 +204,9 @@ socket.on("opponent_tp", function(movementarray){
     }
     else{
         checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
+    }
+    if(game.game_end ==true){
+        location.reload();
     }
     teleporttile.fliptile();
 })
@@ -268,7 +280,6 @@ socket.on('opponent_oracle', function(movementarray){
 
     game.setupcomplete = true;
 })
-
 
 
 //Tile creation section below
@@ -2013,6 +2024,9 @@ function nextmovevalidity(selectedtile, newlocation){//teleport will not be a pa
 }
 
 function checkforchecks(enemyduke, allyduke){
+    if(game.game_end == true){
+        return;
+    }
     //gets the location of ally duke first
     var allypos = [allyduke.y,allyduke.x]; 
     var enemypos = [enemyduke.y,enemyduke.x];
@@ -2057,9 +2071,11 @@ function capture(capturedtile){//for the capturing of tiles
                 const startingbox = document.querySelector('#containerbox'); 
                 startingbox.appendChild(document.getElementById(key)); //placing the captured tile back into the starting box
                 if(capturedtile.name == "duke1"){
+                    game.game_end = true;
                     alert("Player 2 Wins!");
                 }
                 else if(capturedtile.name == "duke2"){
+                    game.game_end = true;
                     alert("Player 1 Wins!");
                 }
             }
@@ -2520,6 +2536,7 @@ function restart(){
     game.offline = false;
     game.duchess = false;
     game.roomfull = false;
+    game.game_end = false;
 
     //resetting the tiles
     draggable.forEach(function(draggable){

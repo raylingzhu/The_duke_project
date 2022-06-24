@@ -55,9 +55,17 @@ io.on('connection', function(socket){
                     socketid = 2;
                     socket.emit('playerroom', message);
                     socket.emit('playerid', socketid);
-                    for(a in listofrooms[i]){
-                        listofrooms[i][a].emit('roomfilled', data);
-                    }
+                    listofrooms[i][0].emit('roomfilled');
+                    listofrooms[i][1].emit('roomfilled');
+                    break
+                }
+                else if(listofrooms[i][0] == null){
+                    listofrooms[i][0] = socket; //creating a way to distinguish between the two sockets in the room
+                    socketid = 1;
+                    socket.emit('playerroom', message);
+                    socket.emit('playerid', socketid);
+                    listofrooms[i][0].emit('roomfilled');
+                    listofrooms[i][1].emit('roomfilled');
                     break
                 }
             }
@@ -70,16 +78,25 @@ io.on('connection', function(socket){
 
     socket.on('join_r_room', function(){ //when a join request is gotten
         for(const i in listofroomnames){
-            if(listofrooms[i][1] == null){
+            if(listofrooms[i][0] == null){
+                listofrooms[i][0] = socket; //creating a way to distinguish between the two sockets in the room
+                socketid = 1;
+                roomname = listofroomnames[i];
+                socket.emit('playerroom', roomname);
+                socket.emit('playerid', socketid);
+                listofrooms[i][0].emit('roomfilled');
+                listofrooms[i][1].emit('roomfilled');
+                break;
+            }
+            else if(listofrooms[i][1] == null){
                 listofrooms[i][1] = socket; //creating a way to distinguish between the two sockets in the room
                 socketid = 2;
                 roomname = listofroomnames[i];
                 socket.emit('playerroom', roomname);
                 socket.emit('playerid', socketid);
-                for(a in listofrooms[i]){
-                    listofrooms[i][a].emit('roomfilled');
-                }
-                break
+                listofrooms[i][0].emit('roomfilled');
+                listofrooms[i][1].emit('roomfilled');
+                break;
             }
         }
         if(socketid == -1){
@@ -110,8 +127,10 @@ io.on('connection', function(socket){
                     listofrooms[remove][1].emit('roomdisband');//sending a disband notice to the other player in room
                 }
             }
-            else{//no need to check because player 1 will always be filled if player 2 leaves, as player 1 is always filled for all rooms
-                listofrooms[remove][0].emit('roomdisband');//sending a disband notice to the other player in room
+            else{
+                if(listofrooms[remove][0] != null){
+                    listofrooms[remove][0].emit('roomdisband');//sending a disband notice to the other player in room
+                }
             }
             listofroomnames.splice(remove,1);
             listofrooms.splice(remove,1);
@@ -128,7 +147,6 @@ io.on('connection', function(socket){
                 listofrooms[room][0].emit('opponent move', datasent);
                 break;
             }
-            
         }
     })
     
@@ -203,6 +221,20 @@ io.on('connection', function(socket){
         }
     })
 
+    socket.on("dukecaptured", function(){ //just a connection between the two
+        for(var room in listofrooms){
+            if(listofrooms[room][0] == socket){
+                listofrooms[room][1].emit('dukecapture');
+                break;
+            }
+            else if(listofrooms[room][1] == socket){
+                listofrooms[room][0].emit('dukecapture');
+                break;
+            }
+            
+        }
+    })
+    
 })
 
 
