@@ -1,5 +1,10 @@
 /*Making the board*/  
 
+html *
+{
+   font-family: sans-serif !important;
+}
+
 body {
     background-color: #302f2f;
 }
@@ -15,7 +20,50 @@ body {
     width: 45vw;
     height: 45vw;
     transform: translate(5%,4.44%);
-    border: 3px solid black;
+    border: 0.1vw solid black;
+}
+
+#sidebox{
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 22.5vw;
+    height: 70vh;
+    transform: translate(166%,0%);
+    border: 0.2vw solid black;
+    background-color: #505050;
+}
+
+#restartdiv{
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 7vw;
+    height: 4vh;
+    transform: translate(0%,-100%);
+    border: 0.1vw solid black;
+}
+
+#adddiv{
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 7vw;
+    height: 4vh;
+    transform: translate(0%,100%);
+    border: 0.1vw solid black;
 }
 
 .square{
@@ -295,4 +343,89 @@ body {
 
 .face2{
     transform: rotateY(180deg);
+}
+
+
+/*POPUP TIME :)*/
+.modal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%) scale(0);
+    transition: 200ms ease-in-out;
+    border: 0.1vw solid black;
+    z-index: 10;
+    background-color: #302f2f;
+    width: 30vw;
+    height: 20vh;
+}
+
+.modal.active{
+    transform: translate(-50%,-50%) scale(1);
+}
+
+.modal-header{
+    padding: 0.5vw 2vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0.1vw solid white;
+}
+
+.modal-header .closebutton{
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+    color: white;
+    font-size: 3vh;
+    font-weight: bold;
+    transform: translate(0%, -40%);
+}
+
+#overlay{
+    transition: 200ms ease-in-out;
+    position: fixed;
+    opacity: 0;
+    top: 0%;
+    left: 0%;
+    right: 0%;
+    bottom: 0%;
+    background-color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+}
+
+#overlay.active{
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-body-button1{
+    color: white; 
+    font-size: 0.9vw; 
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    height: 4vh; width: 10vw;
+    padding-top: 2vh;
+    border: solid white;
+    transform: translate(-80%, 50%);
+}
+
+.modal-body-button2{
+    color: white; 
+    font-size: 1vw; 
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    height: 4vh; width: 10vw;
+    padding-top: 2vh;
+    border: solid white;
+    transform: translate(80%,-50%);
 }

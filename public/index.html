@@ -4,17 +4,24 @@
     <link rel="stylesheet" href = "style.css">
 </head>
 <body>
-    <div id="startdiv">
-        <button onclick='addtile()' >add tile</button>
-        <button onclick='oracle()'>divination</button>
-        <button onclick='summon()'>summon</button>
-        <button onclick='restart()' id="restartbutton">restart</button>
+    <div id="sidebox" class="sidebox">
+        <div id="block" style="height: 5vh;">
+        </div>
+        <div style="padding: 0.3vw">
+            <label for="fname" style="color: white; font-size: 2vw;">Room name:</label> 
+            <input type="text" id="inputbox" placeholder='enter room name' style="height: 7vh; width: 6vw;">
+            <br></br>
+            <button id="createroom"style="height: 4vh; width: 7vw;">Create room</button>
+            <button id="joinroom"style="height: 4vh; width: 7vw;">Join room</button>
+            <button id="joinrandom"style="height: 4vh; width: 7vw;">Join random room</button>
+        </div>
+        <div id="restartdiv">
+            <button onclick='restart()' id="restartbutton" style="height: 4vh; width: 7vw; background-color: lightgoldenrodyellow;">Restart game</button>
+        </div>
+        <div id="adddiv">
+            <button onclick='addtile()' style="height: 4vh; width: 7vw; background-color: lightgreen;" >Add New Tile</button>
+        </div>
     </div>
-    <label for="fname" style="color: white; font-size: 1vw;">Room name:</label> 
-    <input type="text" id="inputbox" placeholder='enter room name' style="height: 1vw; width: 6vw;">
-    <button id="createroom">Create room</button>
-    <button id="joinroom">Join room</button>
-    <button id="joinrandom">Join random room</button>
     
     <!-- Establishing the main game board, the first number of the id will be the y coordinate and second will be the x coordinate -->
     <div class='board' id="board">
@@ -438,6 +445,22 @@
         <div class = 'square' id = "s65"></div>
         <div class = 'square' id = "s66"></div>
     </div>
+
+    <div class="modal" id="modal duchess" >
+        <div class="modal-header">
+            <div style="color: white; font-size: 0.8vw; font-weight: bold;">Please Select The Desired Ability</div>
+            <button class="closebutton" onclick="removemodal()">&times;</button>
+        </div>  
+        <div class="modal-body-button1" onclick="activatetp()" style="cursor: pointer;">
+            Teleport Surroundings
+        </div>
+        <div class="modal-body-button2" onclick="summon()" style="cursor: pointer;">
+            <div style="padding-left: 2vw;">
+                Teleport Self
+            </div>
+        </div>
+    </div>
+    <div id="overlay"></div>
 
 <script src="app.js" defer></script>
 <script src="/socket.io/socket.io.js"></script>

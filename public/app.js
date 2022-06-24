@@ -20,6 +20,8 @@ var game = { //game object, which keeps track of gamestate
     game_end: false
 }
 
+const overlay = document.getElementById("overlay");
+const modal = document.querySelector(".modal")
 
 game.changeturns = function(){
     if(this.playerturn == 'player1'){
@@ -37,12 +39,14 @@ const socket = io();
 var room = "";
 var inroomid = -1;
 
+
 function onlinemode(verifier){
     if(verifier == true){
         game.online = true;
         //making the nessasary elements invisible (restart button and the other players tiles)
         var button = document.getElementById('restartbutton');
         button.parentNode.removeChild(button); //yes miss, i understand that i am telling a parent to kill their child here, look away(they'll make a new one dont worry)
+        document.getElementById('restartdiv').style = "display: none;"
         if(inroomid == 1){//if they are player 1
             document.getElementById("duke2").classList.remove("displayed");
             document.getElementById("f12").classList.remove("displayed");
@@ -56,16 +60,7 @@ function onlinemode(verifier){
 
     }
     else{
-        game.online = false;
-        var restartbutton = document.createElement("button");
-        restartbutton.id = "restartbutton";
-        restartbutton.innerHTML = "restart";
-        var temp = document.getElementById("startdiv");
-        temp.appendChild(restartbutton);
-        restart();
-        restartbutton.onclick = function(){
-            location.reload();
-        };
+        location.reload();
     }
 }
 
@@ -120,10 +115,9 @@ socket.on('roomerror', function(message){ //when it gets an error update
 
 socket.on('roomdisband', function(){
     alert("Room '" + room + "' has been disbanded, as the other player has left.")
-    room = "";
-    inroomid = "";
-    onlinemode(false);
-    game.roomfull = false;
+    setInterval(function(){
+        onlinemode(false);
+    }, 2000);
 })
 
 socket.on('roomfilled', function(verifier){
@@ -149,9 +143,6 @@ socket.on('opponent move', function(movementarray){
         else{
             checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
         }
-        if(game.game_end ==true){
-            location.reload();
-        }
 })
 
 socket.on('opponent_capture', function(movementarray){
@@ -166,9 +157,6 @@ socket.on('opponent_capture', function(movementarray){
         }
         else{
             checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
-        }
-        if(game.game_end ==true){
-            location.reload();
         }
 })
 
@@ -204,9 +192,6 @@ socket.on("opponent_tp", function(movementarray){
     }
     else{
         checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
-    }
-    if(game.game_end ==true){
-        location.reload();
     }
     teleporttile.fliptile();
 })
@@ -1849,7 +1834,8 @@ function generatetile(player){//'player' passed in as either 1 or 2 as a string,
     }
     if(array.length > 0){
         var index = Math.floor(Math.random() * array.length);//gives a random index for the array of unplaced tiles
-        var newtile = array[index];
+        //var newtile = array[index];
+        var newtile = 'du1';
         if(player == "1"){
             unplaced1.splice(index,1); //removes the tile that was just generated
         }
@@ -2055,8 +2041,14 @@ function checkforchecks(enemyduke, allyduke){
 }
 
 function changeborder(validity){
+    var board = document.getElementById("board");
     if(validity == "validmove"){
-        alert("in check");
+        //change border to red
+        board.style = "display: inline-block;position: absolute;top: 0;left: 0;right: 0;bottom: 0;margin: auto;width: 45vw;height: 45vw;transform: translate(5%,4.44%); border: 0.15vw solid red;";
+    }
+    else{
+        //sets it to black border
+        board.style = "display: inline-block;position: absolute;top: 0;left: 0;right: 0;bottom: 0;margin: auto;width: 45vw;height: 45vw;transform: translate(5%,4.44%); border: 0.1vw solid black;";
     }
 }
 
@@ -2073,10 +2065,16 @@ function capture(capturedtile){//for the capturing of tiles
                 if(capturedtile.name == "duke1"){
                     game.game_end = true;
                     alert("Player 2 Wins!");
+                    setInterval(function(){
+                        location.reload();
+                    }, 2000);
                 }
                 else if(capturedtile.name == "duke2"){
                     game.game_end = true;
                     alert("Player 1 Wins!");
+                    setInterval(function(){
+                        location.reload();
+                    }, 2000);
                 }
             }
         }
@@ -2451,7 +2449,7 @@ draggable.forEach(function(draggable){
                 oracle();
             }
         }
-        else if((draggable.id == "du1")||(draggable.id == "du2")||(draggable.id =="ge1")||(draggable.id =="ge2")||(draggable.id =="ma1")||(draggable.id =="ma2")){//doesn't currently work dor duchess as parameter clashes with previous
+        else if((draggable.id =="ge1")||(draggable.id =="ge2")||(draggable.id =="ma1")||(draggable.id =="ma2")){//doesn't currently work dor duchess as parameter clashes with previous
             if(game.playerturn == listoftiles[draggable.id].ownership){//if the player that owns the tile is able to play
                 if(game.setupcomplete == true){ //mandatory check to see whether the game is able to be played
                     if(game.teleportmode == false){
@@ -2467,18 +2465,57 @@ draggable.forEach(function(draggable){
                 }
             }
         }
+        else if((draggable.id = "du1")||(draggable.id =="du2")){
+            if(game.playerturn == listoftiles[draggable.id].ownership){//if the player that owns the tile is able to play
+                if(game.setupcomplete == true){ //mandatory check to see whether the game is able to be played
+                    if(game.teleportmode == false){
+                        if(game.online == true){
+                            if(parseInt(game.playerturn[6]) != inroomid){ 
+                                return;
+                            }
+                        }
+                        openModal(modal,overlay);
+                    }
+                }
+            }
+        }
     })
 })
 
-function summon(){
-    if(game.playerturn == listoftiles[draggable.id].ownership){//if the player that owns the tile is able to play
-        if(game.online == true){
-            if(parseInt(game.playerturn[6]) != inroomid){ 
-                return;
-            }
-        }
-        duchess();
+
+function activatetp(){
+    game.teleportmode = true;
+    alert("teleport mode on");
+    teleporttile = "du"+game.playerturn[6];
+    removemodal();
+}
+
+function openModal(){
+    if(modal == null){
+        return
     }
+    modal.classList.add("active");
+    overlay.classList.add("active");
+}
+
+function removemodal(){
+    if(modal == null){
+        return
+    }
+    modal.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+overlay.addEventListener("click", function(){
+    const modals = document.querySelectorAll(".modal.active");
+    modals.forEach(function(){
+        removemodal(modal)
+    });
+});
+
+function summon(){
+    removemodal();
+    duchess();
 }
 
 
@@ -2508,60 +2545,5 @@ square.forEach(function(square){
 })
 
 function restart(){
-    board = 
-    [["*","*","*","*","*","*"]
-    ,["*","*","*","*","*","*"]
-    ,["*","*","*","*","*","*"]
-    ,["*","*","*","*","*","*"]
-    ,["*","*","*","*","*","*"]
-    ,["*","*","*","*","*","*"]];
-
-    for(let keys in listoftiles){
-        listoftiles[keys].y = 'unplaced';
-        listoftiles[keys].x = 'unplaced';
-        listoftiles[keys].facingup = true;
-    }
-
-    unplaced1 = ["as1","bo1","ch1","dr1","ge1","kn1","ma1","pi1","se1","lo1","wi1","or1","du1"];
-    unplaced2 = ["as2","bo2","ch2","dr2","ge2","kn2","ma2","pi2","se2","lo2","wi2","or2","du2"];
-
-    movedtile = "none";
-    teleporttile = "none";
-    game.playerturn = "player1";
-    game.setupcomplete = false;
-    game.divinationmode = false;
-    game.nocheck = true;
-    game.teleportmode = false;
-    game.online = false;
-    game.offline = false;
-    game.duchess = false;
-    game.roomfull = false;
-    game.game_end = false;
-
-    //resetting the tiles
-    draggable.forEach(function(draggable){
-        var contents = draggable.querySelector('.tile_inner')
-        if(contents.classList.contains("is_flipped") == true){ //checks if tiles are flipped, and flipping them back onto their main side
-            contents.classList.toggle("is_flipped");
-        }
-
-        if(draggable.classList.contains("displayed") == true){
-            draggable.classList.remove('displayed');
-        }
-
-        if (draggable.id == "duke1" || draggable.id == "f11" || draggable.id == "f21" || draggable.id == "duke2" || draggable.id == "f12" || draggable.id == "f22" ){
-            draggable.classList.add('displayed'); //making every image other than the starting ones invisible
-        } 
-        else{
-            draggable.classList.remove('displayed');
-        }
-    })
-
-
-
-    draggable.forEach(function(draggable){
-        const startingbox = document.querySelector('#containerbox'); 
-        startingbox.appendChild(draggable);
-    })
-
-    }
+    location.reload();
+};
