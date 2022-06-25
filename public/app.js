@@ -227,7 +227,11 @@ socket.on('opponent_place', function(movementarray){
             game.setupcomplete = true;
         }
     }
+    
 
+    checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
+    checkforchecks(listoftiles["duke2"], listoftiles["duke1"]);
+    
     console.log(board);
 })
 
@@ -246,6 +250,8 @@ socket.on('opponent_duchess', function(movementarray){
     listoftiles["duke"+passedtileid[2]].fliptile();
     game.changeturns();
     console.log(board);
+    checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
+    checkforchecks(listoftiles["duke2"], listoftiles["duke1"]);
 })
 
 socket.on('opponent_oracle', function(movementarray){
@@ -264,6 +270,8 @@ socket.on('opponent_oracle', function(movementarray){
     game.changeturns();
 
     game.setupcomplete = true;
+    checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
+    checkforchecks(listoftiles["duke2"], listoftiles["duke1"]);
 })
 
 
