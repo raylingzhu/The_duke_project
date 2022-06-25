@@ -248,9 +248,9 @@ socket.on('opponent_duchess', function(movementarray){
     var validity = makeplacement(listoftiles[passedtileid],newlocation);
 
     listoftiles["duke"+passedtileid[2]].fliptile();
-    game.changeturns();
     checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
     checkforchecks(listoftiles["duke2"], listoftiles["duke1"]);
+    game.changeturns();
 })
 
 socket.on('opponent_oracle', function(movementarray){
@@ -1841,7 +1841,8 @@ function generatetile(player){//'player' passed in as either 1 or 2 as a string,
     }
     if(array.length > 0){
         var index = Math.floor(Math.random() * array.length);//gives a random index for the array of unplaced tiles
-        var newtile = array[index];
+        //var newtile = array[index];
+        var newtile = "du1";
         if(player == "1"){
             unplaced1.splice(index,1); //removes the tile that was just generated
         }
