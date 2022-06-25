@@ -112,7 +112,7 @@ io.on('connection', function(socket){
                 remove = i; //room index required to be removed
                 break;
             }
-            else if(listofrooms[i][1].disconnected != null){
+            else if(listofrooms[i][1] != null){
                 if(listofrooms[i][1].connected == false){
                     remove = i; //room index required to be removed
                     break;
