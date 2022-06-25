@@ -249,7 +249,6 @@ socket.on('opponent_duchess', function(movementarray){
 
     listoftiles["duke"+passedtileid[2]].fliptile();
     game.changeturns();
-    console.log(board);
     checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
     checkforchecks(listoftiles["duke2"], listoftiles["duke1"]);
 })
@@ -2309,6 +2308,12 @@ draggable.forEach(function(draggable){
                         if(validity == "validstrike"){
                             var data = [selectedtileID,newlocation];
                             socket.emit("makecapture", data);
+                            if(selectedtile.ownership == "player1"){
+                                checkforchecks(listoftiles["duke2"], listoftiles["duke1"]);
+                            }
+                            else{
+                                checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
+                            }
                         }
                     }
                     if(validity == "validmove"){
@@ -2469,9 +2474,11 @@ draggable.forEach(function(draggable){
                                 return;
                             }
                         }
-                        game.teleportmode = true; //this tells the movement section to use the teleport ranges of the tile to check for the movement of tiles
-                        alert("teleport mode on");
-                        teleporttile = draggable.id;
+                        if(listoftiles[draggable.id].facingup == false){
+                            game.teleportmode = true; //this tells the movement section to use the teleport ranges of the tile to check for the movement of tiles
+                            alert("teleport mode on");
+                            teleporttile = draggable.id;
+                        }
                     }
                 }
             }
