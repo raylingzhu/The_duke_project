@@ -1834,8 +1834,7 @@ function generatetile(player){//'player' passed in as either 1 or 2 as a string,
     }
     if(array.length > 0){
         var index = Math.floor(Math.random() * array.length);//gives a random index for the array of unplaced tiles
-        //var newtile = array[index];
-        var newtile = 'du1';
+        var newtile = array[index];
         if(player == "1"){
             unplaced1.splice(index,1); //removes the tile that was just generated
         }
@@ -2465,7 +2464,7 @@ draggable.forEach(function(draggable){
                 }
             }
         }
-        else if((draggable.id = "du1")||(draggable.id =="du2")){
+        else if((draggable.id == "du1")||(draggable.id =="du2")){
             if(game.playerturn == listoftiles[draggable.id].ownership){//if the player that owns the tile is able to play
                 if(game.setupcomplete == true){ //mandatory check to see whether the game is able to be played
                     if(game.teleportmode == false){

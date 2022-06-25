@@ -32,7 +32,7 @@ body {
     bottom: 0;
     margin: auto;
     width: 22.5vw;
-    height: 70vh;
+    height: 60vh;
     transform: translate(166%,0%);
     border: 0.2vw solid black;
     background-color: #505050;
@@ -48,7 +48,6 @@ body {
     margin: auto;
     width: 7vw;
     height: 4vh;
-    transform: translate(0%,-100%);
     border: 0.1vw solid black;
 }
 
@@ -62,7 +61,7 @@ body {
     margin: auto;
     width: 7vw;
     height: 4vh;
-    transform: translate(0%,100%);
+    transform: translate(0%,200%);
     border: 0.1vw solid black;
 }
 
@@ -429,3 +428,26 @@ body {
     border: solid white;
     transform: translate(80%,-50%);
 }
+
+#topbar{
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: auto;
+    width: 100vw;
+    height: 4.5vh;
+    background-color: rgb(32, 32, 32);
+}
+
+
+
+.iconimage {
+    left: 0;
+    right: 0;
+    margin: auto;
+    position:absolute;
+    width: 30%;
+    height: 99%;
+}
+
