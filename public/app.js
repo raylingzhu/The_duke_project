@@ -1841,8 +1841,7 @@ function generatetile(player){//'player' passed in as either 1 or 2 as a string,
     }
     if(array.length > 0){
         var index = Math.floor(Math.random() * array.length);//gives a random index for the array of unplaced tiles
-        //var newtile = array[index];
-        var newtile = "du1";
+        var newtile = array[index];
         if(player == "1"){
             unplaced1.splice(index,1); //removes the tile that was just generated
         }
