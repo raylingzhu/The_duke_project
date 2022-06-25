@@ -2401,6 +2401,8 @@ draggable.forEach(function(draggable){
                         else{
                             game.offline = true;
                         }
+                        checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
+                        checkforchecks(listoftiles["duke2"], listoftiles["duke1"]);
                     }
                     if((listoftiles['duke1'].y != 'unplaced')&&(listoftiles['duke2'].y != 'unplaced')&&(listoftiles['f11'].y != 'unplaced')&&(listoftiles['f12'].y != 'unplaced')&&(listoftiles['f21'].y != 'unplaced')&&(listoftiles['f22'].y != 'unplaced')){
                         //first checking if the starting tiles have been placed with the if statement in the above if statement
@@ -2439,6 +2441,8 @@ draggable.forEach(function(draggable){
                             var datasent = [selectedtileID,newlocation];
                             socket.emit("enemyoracle", datasent);
                         }
+                        checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
+                        checkforchecks(listoftiles["duke2"], listoftiles["duke1"]);
                     }
                 }
             }
