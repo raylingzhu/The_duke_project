@@ -232,7 +232,6 @@ socket.on('opponent_place', function(movementarray){
     checkforchecks(listoftiles["duke1"], listoftiles["duke2"]);
     checkforchecks(listoftiles["duke2"], listoftiles["duke1"]);
     
-    console.log(board);
 })
 
 socket.on('opponent_duchess', function(movementarray){
@@ -1986,7 +1985,6 @@ function duchess(){
 function nextmovevalidity(selectedtile, newlocation){//teleport will not be a part of this section
     
        var possiblesquares = selectedtile.possiblemove(board); 
-        console.log(possiblesquares);
         //possiblesquares will be an array containing integer coordinatea to where a legal movement can be made, stored in the form [y,x] (y = horizontal value, x = vertical value)
 
         var possiblestrike = [];
@@ -2425,7 +2423,6 @@ draggable.forEach(function(draggable){
                             game.setupcomplete = true;
                         }
                     }
-                    console.log(board);
                 }
                 else if((game.divinationmode == true)&&(game.setupcomplete == false)){
                     var newlocation = [parseInt(finalsquare[1]),parseInt(finalsquare[2])];
