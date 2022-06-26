@@ -2259,6 +2259,7 @@ function maketeleport(selectedtile,newlocation,teleporttile){ //note: selected t
         }
     }
     game.teleportmode = false;
+    alert("Teleport location invalid, teleport mode off.");
     return "invalidmove";
 }
 
