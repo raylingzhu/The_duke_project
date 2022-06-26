@@ -70,7 +70,7 @@ document.querySelector('#createroom').onclick = function(){
         socket.emit('create_room_request', text);
     }
     else{
-        alert("You are already in a game/room, please reload/restart game before attempting to join a new room.");
+        alert("You are already in a game/room, please reload game before attempting to join a new room.");
     }
 }
 
