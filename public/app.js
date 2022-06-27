@@ -2260,7 +2260,7 @@ function maketeleport(selectedtile,newlocation,teleporttile){ //note: selected t
         }
     }
     game.teleportmode = false;
-    alert("Teleport location invalid, teleport mode off.");
+    alert("The teleport starting or ending squares are invalid, teleport mode off.");
     return "invalidmove";
 }
 
