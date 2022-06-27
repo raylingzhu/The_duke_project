@@ -45,8 +45,8 @@ function onlinemode(verifier){
         game.online = true;
         //making the nessasary elements invisible (restart button and the other players tiles)
         var button = document.getElementById('restartbutton');
-        button.parentNode.removeChild(button); //yes miss, i understand that i am telling a parent to kill their child here, look away(they'll make a new one dont worry)
-        document.getElementById('restartdiv').style = "display: none;"
+        button.innerHTML = "Exit room"; 
+
         if(inroomid == 1){//if they are player 1
             document.getElementById("duke2").classList.remove("displayed");
             document.getElementById("f12").classList.remove("displayed");
@@ -58,6 +58,9 @@ function onlinemode(verifier){
             document.getElementById("f21").classList.remove("displayed");
         }
 
+        document.getElementById("createroom").disabled = true;
+        document.getElementById("joinroom").disabled = true;
+        document.getElementById("joinrandom").disabled = true;
     }
     else{
         location.reload();
@@ -2276,7 +2279,6 @@ draggable.forEach(function(draggable){
         if (currentsquare != "containerbox"){
             currentsquarex = (currentsquare[2]) - 1;
             currentsquarey = (currentsquare[1]) - 1;
-            board[currentsquarey][currentsquarex] = '*';
         }
 
     })
@@ -2300,6 +2302,7 @@ draggable.forEach(function(draggable){
                     }
                     var newlocation = [parseInt(finalsquare[1]),parseInt(finalsquare[2])];
                     var validity = makemove(selectedtile,newlocation);
+                    console.log(board);
                     if ((validity == 'invalidmove') || (validity == "validstrike")){ //need to place it back in it's original location in the case of wrong move or strike
                         var originalsquareID = "s"+(selectedtile.y.toString()+selectedtile.x.toString());//constructing the id of the original square
                         const originalsquare = document.getElementById(originalsquareID);
