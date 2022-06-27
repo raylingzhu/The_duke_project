@@ -125,6 +125,7 @@ socket.on('roomdisband', function(){
 
 socket.on('roomfilled', function(verifier){
     game.roomfull = true;
+    alert("Room is filled, the game may now begin.");
 })
 
 socket.on('full', function(){
